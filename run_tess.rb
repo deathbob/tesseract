@@ -12,7 +12,11 @@ unless File.exists?(ndir)
   Dir.mkdir(ndir)
 end
 
-files = files.first(4)
+Dir.mkdir('tmp') unless File.exists?('tmp')
+
+
+
+# Pocket squares start at SCAN 119
 
 files.each_with_index do |x, idx|
 
@@ -20,7 +24,7 @@ files.each_with_index do |x, idx|
   infile = File.join(odir, x)
   clown = Magick::Image::read(infile).first
 
-  foo = clown.crop(1100, 90, 400, 200)
+  foo = clown.crop(1100, 10, 400, 330)
   clown.destroy!
 
   base = File.basename(x, '.tif')
@@ -31,8 +35,7 @@ files.each_with_index do |x, idx|
 
 
   outfile = File.join(ndir, (subbase + '.ocr'))
-  
-  puts "\n", outfile, "\n"
+
   res = system("tesseract #{tmpfile} #{outfile}")
 end
 
