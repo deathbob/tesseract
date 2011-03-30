@@ -25,7 +25,7 @@ files.each_with_index do |x, idx|
 
   base = File.basename(x, '.tif')
   subbase = base.gsub(" ", "")
-  tmpfile = "tmp/" + base + ".tif"
+  tmpfile = "tmp/" + subbase + ".tif"
   foo.write tmpfile
   foo.destroy!
 
