@@ -24,7 +24,7 @@ files.each_with_index do |x, idx|
   infile = File.join(odir, x)
   clown = Magick::Image::read(infile).first
 
-  foo = clown.crop(1100, 10, 400, 330)
+  foo = clown.crop(1100, 10, 420, 330)
   clown.destroy!
 
   base = File.basename(x, '.tif')
