@@ -1,6 +1,11 @@
 require 'fileutils'
 require 'rubygems'
 require 'RMagick'
+require 'peter_blair'
+
+
+
+
 # odir this is the path to where the scans are.
 odir = 'scans'
 
@@ -13,6 +18,14 @@ unless File.exists?(ndir)
 end
 
 Dir.mkdir('tmp') unless File.exists?('tmp')
+
+PeterBlair.new(
+  :scan_dir => 'scans',
+  :line_number => "25",
+  :ocr_dir => 'slices_' + Time.now.to_i.to_s
+)
+
+raise EndHere
 
 
 

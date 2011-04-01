@@ -9,40 +9,49 @@ line_number = '25'
 files = Dir.entries(odir).reject{|x| !x.match(/SCAN/)}
 
 # ndir this is where you want the ocr of the scans to go
-ndir = 'slices_'+ Time.now.to_i.to_s
+ndir = 'slices_'+ Time.now.to_i.to_s + "_shifted_left"
 unless File.exists?(ndir)
   Dir.mkdir(ndir)
 end
 
 #files = [files[27]]
-files = files.first 40
+#files = files.first 40
 
-width = 500
-height = 500
+width = 500 - 50
+height = 500 - 50
+
+x_shift = 0
+y_shift = 0
 
 crops = {
-  '1' => [165, 460],
-  '2' => [975, 460],
-  '3' => [165, 1360],
-  '4' => [1000, 1360],
+  '1' => [185,   490],
+#  '2' => [995,   490],
+  '2' => [1010,  490],
+  '3' => [185,  1390],
+  '4' => [1010, 1390],
 }
 
 # PS are about 750 w by 380 h
 ps_crops = {
-  '1' => [445, 340],
-  '2' => [445, 850],
-  '3' => [445, 1350],
-  '4' => [445, 1850],
+  '1' => [455, 340],
+  '2' => [455, 850],
+  '3' => [455, 1350],
+  '4' => [455, 1850],
 }
-ps_width  = 740
-ps_height = 390
+ps_width  = 700
+ps_height = 370
 
 name_scan = {}
 previous_name = ''
 
-puts files.inspect
+
+
+
 files = files.sort{|a, b| a.length <=> b.length}
-puts files.inspect
+
+
+
+
 
 files.each do |x|
   infile = File.join(odir, x)
@@ -76,7 +85,7 @@ files.each do |x|
   w = width
   h = height
   # Logic to determine if this is a pocket square or a regular tie swatch
-  is_pocket_square = name.match('PS') ? true : false
+  is_pocket_square = (name.match('PS') && (name.length > 4)) ? true : false
   if is_pocket_square
     style = ps_crops
     w = ps_width
@@ -88,13 +97,17 @@ files.each do |x|
   clown = Magick::Image::read(infile).first
 
   style.each do |k, crop|
-    foo = clown.crop(crop[0], crop[1], w, h)
-    # resize if ps
-    # if is_pocket_square
-    #   foo.change_geometry!('500x500>') { |cols, rows, img|
-    #     img.resize!(cols, rows)
-    #   }
-    # end
+    foo = clown.crop(crop[0] + x_shift, crop[1] + y_shift, w, h)
+    ## resize if pocket square
+    if is_pocket_square
+      foo.change_geometry!('500x500>') { |cols, rows, img|
+        img.resize!(cols, rows)
+      }
+    else
+      foo.change_geometry!('500x500!'){ |cols, rows, img|
+        img.resize!(cols, rows)
+      }
+    end
 
     # build name
     num = k.to_i
