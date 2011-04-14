@@ -22,6 +22,10 @@ ndir = 'ocrs_'+ Time.now.to_i.to_s
 
 
 
+# tmp is where the crops of the full size images are stored.  It can safely be blown away between runs, and so is labeled tmp.
+# The folder does need to exist, so we create it if it's been blown away.
+Dir.mkdir('tmp') unless File.exists?('tmp')
+
 
 # It is unlikely that you need to edit anything below this line.
 ###########################################################################################################################################################
@@ -31,24 +35,12 @@ ndir = 'ocrs_'+ Time.now.to_i.to_s
 # This means that when you're scanning them in with Preview or whatever, you need to make sure they're being saved with the word SCAN in the name.
 files = Dir.entries(odir).reject{|x| !x.match(/SCAN/i)}
 
-
 unless File.exists?(ndir)
   Dir.mkdir(ndir)
 end
 
-# tmp is for i don't know what.
-Dir.mkdir('tmp') unless File.exists?('tmp')
-
-# PeterBlair.new(
-#   :scan_dir => 'scans',
-#   :line_number => "25",
-#   :ocr_dir => 'slices_' + Time.now.to_i.to_s
-# )
-#
-# raise EndHere
-
 # Loop through the scans and extract the code, something like PB25ANPS or PB2501
-files.each_with_index do |x, idx|
+files.each do |x|
 
   infile = File.join(odir, x)
   clown = Magick::Image::read(infile).first
@@ -57,7 +49,7 @@ files.each_with_index do |x, idx|
   # If you don't destroy the image, your RAM usage will go thru the roof.  Don't blame me if you chew up 4gigs of ram or more.
   clown.destroy!
 
-  base = File.basename(x, '.tif')
+  base = File.basename(x, '.*')
   subbase = base.gsub(" ", "")
   tmpfile = "tmp/" + subbase + ".tif"
   foo.write tmpfile

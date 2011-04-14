@@ -11,11 +11,13 @@ line_number = '25'
 
 
 
-# ndir this is where you want the ocr of the scans to go
+# ndir this is where you want the slices of the scans to go
 ndir = 'slices_'+ Time.now.to_i.to_s #+ "_shifted_left"
 unless File.exists?(ndir)
   Dir.mkdir(ndir)
 end
+
+
 x_shift = 0
 y_shift = 0
 
@@ -53,6 +55,23 @@ ps_crops = {
 }
 ps_width  = 700
 ps_height = 370
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 name_scan = {}
 previous_name = ''
