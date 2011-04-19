@@ -2,7 +2,7 @@ require 'fileutils'
 require 'rubygems'
 require 'RMagick'
 
-class PeterBlair
+class SliceDice
 
   attr_accessor :scan_dir, :scan_file_names, :line_number, :ocr_dir, :slice_dir, :x_shift, :y_shift, :crops, :alt_crops
   sizes = [:slice_width, :slice_height, :alt_slice_width, :alt_slice_height]
@@ -10,11 +10,13 @@ class PeterBlair
 
   def initialize(options = {})
     @time = Time.now.to_i.to_s
+
     # Directory where the image files you are going to OCR live.
-    # They better be in .tif format and read left to right.
+    # They need to be in .tif format and read left to right.
     # That means you need to rotate the image if the text doesn't run left to right after scanning them in.
     @scan_dir = options[:scan_dir] || "scans"
-    # Line in Peter Blair
+
+    # Line Number, for internal purposes, safe to ignore.
     @line_number = options[:line_number] || '25'
 
     # Directory where the files that result from the slicing process will be put
@@ -25,9 +27,12 @@ class PeterBlair
     @ocr_dir = "#{@scan_dir}_OCR_"    + @time
     Dir.mkdir(@ocr_dir)    unless File.exists?(@ocr_dir)
 
-
+    # Only grab files with the word SCAN in the name.
+    # This means that when you're scanning them in with Preview or whatever, you need to make sure they're being saved with the word SCAN in the name.
     @scan_file_names = Dir.entries(@scan_dir).reject{|x| !x.match(/SCAN/)}
-    # tmp is where the crops of the full size images are stored.  It can safely be blown away between runs, and so is labeled tmp.
+
+    # tmp is where the crops of the full size images are stored.
+    # It can safely be blown away between runs.
     Dir.mkdir('tmp') unless File.exists?('tmp')
 
 
@@ -86,7 +91,6 @@ class PeterBlair
       puts "\t#{name}"
       name_scan[name] = fname
 
-
       # Logic to determine if this is a pocket square or a regular tie swatch
       is_pocket_square = (name.match('PS') && (name.length > 4)) ? true : false
       if is_pocket_square
@@ -98,7 +102,6 @@ class PeterBlair
         w = @slice_width
         h = @slice_height
       end
-
 
       # actually do the slicing
       clown = Magick::Image::read(infile).first
@@ -132,7 +135,6 @@ class PeterBlair
   end
 
 
-
   # Stuff to find the name of the slices
   # You will need to have a folder in the directory which you are running this program from, called 'ocrs'
   # In that folder will need to be a bunch of files that correspond to the scans you made,
@@ -155,12 +157,6 @@ class PeterBlair
       next
     end
     return name
-
   end
-
-
-
-
-
 
 end

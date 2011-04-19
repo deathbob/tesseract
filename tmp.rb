@@ -1,4 +1,4 @@
-require 'peter_blair'
+require 'slice_dice'
 
 
 crops = {
@@ -15,7 +15,7 @@ alt_crops = {
   '3' => [455, 1350],
   '4' => [455, 1850],
 }
-pete = PeterBlair.new(
+pete = SliceDice.new(
   :scan_dir =>    'scans_missing',
   :line_number => '25',
   :crops => crops,
