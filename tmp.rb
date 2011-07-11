@@ -16,7 +16,7 @@ alt_crops = {
   '4' => [455, 1850],
 }
 pete = SliceDice.new(
-  :scan_dir =>    'scans_missing',
+  :scan_dir =>    'anchor',
   :line_number => '25',
   :crops => crops,
   :alt_crops => alt_crops

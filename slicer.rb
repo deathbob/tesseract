@@ -144,6 +144,7 @@ files.each do |x|
     bar = File.join(ndir, "PB" + name + "-#{num}" + '.jpg')
     foo.write bar
   end
+  # make sure you destroy the image or you and your RAM will be sorry (and swamped)
   clown.destroy!
 
   previous_name = name
